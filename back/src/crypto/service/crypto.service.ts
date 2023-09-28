@@ -42,12 +42,12 @@ export class CryptoService {
     if (!cryptoId) {
       throw new Error(`Crypto symbol ${id} seems to be invalid.`);
     }
-
     const currencyResponse = 'usd';
     var lastminute = new Date();
     lastminute.setMinutes(lastminute.getMinutes() - 1);
 
     const priceFromDb = await this.PriceModel.findOne({
+      currency: { id: id},
       createdAt: { $gte: lastminute.toISOString() },
     });
 
