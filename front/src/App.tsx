@@ -14,7 +14,9 @@ export default function App() {
   const [selection, setSelection] = useState<any[]>([]);
 
   const [usdValues, setUsdValues] = useState<any>(null);
-  const [sumValue, setSumValue] = useState(null);
+  const [sumValue, setSumValue] = useState(0);
+
+  const [lastUpdateTime, setLastUpdateTime] = useState(Date.now());
 
   const addToSelection = () => {
     const newEntry = { name: selectedCurrency.id, value: quantityInput };
@@ -30,7 +32,7 @@ export default function App() {
   const reset = () => {
     setSelection([]);
     setUsdValues([]);
-    setSumValue(null);
+    setSumValue(0);
   };
 
   useEffect(() => {
@@ -38,7 +40,10 @@ export default function App() {
     socket.emit("getSymbols", null);
 
     socket.on("getSymbols", (indexesArray) => setIndexes(indexesArray));
-    socket.on("getUsdValue", (usdValuesArray) => setUsdValues(usdValuesArray));
+    socket.on("getUsdValue", (usdValuesArray) => {
+      setLastUpdateTime(Date.now());
+      setUsdValues(usdValuesArray);
+    });
     socket.on("getUsdSumedPrices", (sumResult) => setSumValue(sumResult));
   }, []);
 
@@ -106,7 +111,7 @@ export default function App() {
             </div>
           )}
 
-          <ResultTable data={usdValues} sumValue={sumValue} />
+          <ResultTable data={usdValues} sumValue={sumValue} lastUpdateTime={lastUpdateTime} />
         </div>
       </Paper>
     </div>
