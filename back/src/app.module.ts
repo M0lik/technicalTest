@@ -6,7 +6,7 @@ import { TasksModule } from './tasks/tasks.module';
 
 @Module({
   imports: [
-    MongooseModule.forRoot('mongodb://localhost/nest'),
+    MongooseModule.forRoot(`mongodb://mongo/nest`),
     ScheduleModule.forRoot(),
     CryptoModule,
     TasksModule,

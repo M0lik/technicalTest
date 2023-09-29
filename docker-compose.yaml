@@ -1,0 +1,29 @@
+version: '1'
+services:
+  mongo:
+    image: mongo:6.0
+    container_name: mongo
+    restart: always
+    ports:
+      - '27017:27017'
+   
+
+  app-backend:
+    build:
+      dockerfile: ./back.Dockerfile
+      context: ./back/
+    container_name: backend-app
+    ports:
+      - 3000:3000
+    links:
+      - mongo
+
+  app-front:
+    build:
+      dockerfile: ./front.Dockerfile
+      context: ./front/
+    depends_on:
+      - app-backend
+    container_name: front-app
+    ports:
+      - 3001:3001
